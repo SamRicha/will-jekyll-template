@@ -1,4 +1,60 @@
+
 <header class="header-site" role="banner">
+    <style>
+        #canvas{
+            background-image: linear-gradient(bottom, rgb(105,173,212) 0%, rgb(23,82,145) 84%);
+            background-image: -o-linear-gradient(bottom, rgb(105,173,212) 0%, rgb(23,82,145) 84%);
+            background-image: -moz-linear-gradient(bottom, rgb(105,173,212) 0%, rgb(23,82,145) 84%);
+            background-image: -webkit-linear-gradient(bottom, rgb(105,173,212) 0%, rgb(23,82,145) 84%);
+            background-image: -ms-linear-gradient(bottom, rgb(105,173,212) 0%, rgb(23,82,145) 84%);
+
+            background-image: -webkit-gradient(
+                linear,
+                left bottom,
+                left top,
+                color-stop(0, rgb(105,173,212)),
+                color-stop(0.84, rgb(23,82,145))
+            );
+            z-index: -1;
+        }
+
+        @-webkit-keyframes Gradient {
+            0% {
+                background-position: 0% 50%
+            }
+            50% {
+                background-position: 100% 50%
+            }
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+        @-moz-keyframes Gradient {
+            0% {
+                background-position: 0% 50%
+            }
+            50% {
+                background-position: 100% 50%
+            }
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+        @keyframes Gradient {
+            0% {
+                background-position: 0% 50%
+            }
+            50% {
+                background-position: 100% 50%
+            }
+            100% {
+                background-position: 0% 50%
+            }
+        }
+    </style>
+    <canvas id="canvas"></canvas>
     <div class="content">
         <h1>
             <span class="site-title">{{site.username}}</span>
@@ -6,12 +62,106 @@
         </h1>
         <div class="icons-home">
             <a aria-label="Send email" href="mailto:{{site.email}}"><svg class="icon icon-email"><use xlink:href="#icon-email"></use></svg></a>
-            <a aria-label="My Twitter" target="_blank" href="https://twitter.com/{{site.twitter_username}}"><svg class="icon icon-twitter"><use xlink:href="#icon-twitter"></use></svg></a>
-            <a aria-label="My Google Plus" target="_blank" href="https://plus.google.com/{{site.gplus_username}}/posts"><svg class="icon icon-google-plus"><use xlink:href="#icon-google-plus"></use></svg></a>
             <a aria-label="My Github" target="_blank" href="https://github.com/{{site.github_username}}"><svg class="icon icon-github-alt"><use xlink:href="#icon-github-alt"></use></svg></a>
-            <a aria-label="Use the RSS to get updated" target="_blank" href="{{ "/feed.xml" | prepend: site.baseurl }}"><svg class="icon icon-rss"><use xlink:href="#icon-rss"></use></svg></a>
+            <a aria-label="My Twitter" target="_blank" href="https://twitter.com/{{site.twitter_username}}"><svg class="icon icon-twitter"><use xlink:href="#icon-twitter"></use></svg></a>
         </div>
     </div>
     <a role="button" class="down" data-scroll href="#scroll"><svg class="icon icon-angle-down"><use xlink:href="#icon-angle-down"></use></svg></a>
     {% include menu-search.html %}
 </header>
+    <script id="rendered-js">(function () {
+        var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame ||
+          function (callback) {
+            window.setTimeout(callback, 1000 / 60);
+          };
+          window.requestAnimationFrame = requestAnimationFrame;
+        })();
+        var flakes = [],
+        canvas = document.getElementById("canvas"),
+        ctx = canvas.getContext("2d"),
+        flakeCount = 400,
+        mX = -100,
+        mY = -100;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        function snow() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          for (var i = 0; i < flakeCount; i++) {
+            var flake = flakes[i],
+            x = mX,
+            y = mY,
+            minDist = 150,
+            x2 = flake.x,
+            y2 = flake.y;
+            var dist = Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y)),
+            dx = x2 - x,
+            dy = y2 - y;
+            if (dist < minDist) {
+              var force = minDist / (dist * dist),
+              xcomp = (x - x2) / dist,
+              ycomp = (y - y2) / dist,
+              deltaV = force / 2;
+              flake.velX -= deltaV * xcomp;
+              flake.velY -= deltaV * ycomp;
+            } else {
+              flake.velX *= .98;
+              if (flake.velY <= flake.speed) {
+                flake.velY = flake.speed;
+              }
+              flake.velX += Math.cos(flake.step += .05) * flake.stepSize;
+            }
+            ctx.fillStyle = "rgba(255,255,255," + flake.opacity + ")";
+            flake.y += flake.velY;
+            flake.x += flake.velX;
+            if (flake.y >= canvas.height || flake.y <= 0) {
+              reset(flake);
+            }
+            if (flake.x >= canvas.width || flake.x <= 0) {
+              reset(flake);
+            }
+            ctx.beginPath();
+            ctx.arc(flake.x, flake.y, flake.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          requestAnimationFrame(snow);
+        };
+        function reset(flake) {
+          flake.x = Math.floor(Math.random() * canvas.width);
+          flake.y = 0;
+          flake.size = Math.random() * 3 + 2;
+          flake.speed = Math.random() * 1 + 0.5;
+          flake.velY = flake.speed;
+          flake.velX = 0;
+          flake.opacity = Math.random() * 0.5 + 0.3;
+        }
+        function init() {
+          for (var i = 0; i < flakeCount; i++) {
+            var x = Math.floor(Math.random() * canvas.width),
+            y = Math.floor(Math.random() * canvas.height),
+            size = Math.random() * 3 + 2,
+            speed = Math.random() * 1 + 0.5,
+            opacity = Math.random() * 0.5 + 0.3;
+            flakes.push({
+              speed: speed,
+              velY: speed,
+              velX: 0,
+              x: x,
+              y: y,
+              size: size,
+              stepSize: Math.random() / 30,
+              step: 0,
+              opacity: opacity });
+          }
+          snow();
+        };
+        canvas.addEventListener("mousemove", function (e) {
+          mX = e.clientX,
+          mY = e.clientY;
+        });
+        window.addEventListener("resize", function () {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+        init();
+        //# sourceURL=pen.js
+        </script>
