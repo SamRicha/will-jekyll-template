@@ -1,34 +1,47 @@
 ---
 layout: default
 ---
+<style>
+    .three-wide {
+        text-align: center;
+        height: auto;
+    }
+    #id {
+        font-family: 'Didact Gothic', sans-serif;
+    }
+    figure {
+        max-width: 25%;
+        height: auto;
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 30px;
+    }
+    figcaption {
+        margin-top: 10px;
+    }
+    img {
+        width: 100%;
+    }
+</style>    
+<main id="scroll">
+    
 
-<main id="scroll" class="home" role="main" itemprop="mainContentOfPage" itemscope="itemscope" itemtype="http://schema.org/Blog">
-    {% for post in site.posts %}
-        <article role="article" class="post-item" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" itemprop="blogPost">
-                <a class="datetime" href="{{ post.url | prepend: site.baseurl }}">
-                    <meta itemprop="datePublished" content="{{post.date}}">
-                    <time datetime="{{ post.date | date_to_xmlschema }}">
-                        <span class="day">
-                            {{ post.date | date: "%d" }}
-                        </span>
-                        <span class="month-year">
-                            {{ post.date | date: "%B %Y" }}
-                        </span>
-                    </time>
-                </a>
-                <div class="content">
-                    <a href="{{ post.url | prepend: site.baseurl }}"><h2 class="post-title" itemprop="name">{{ post.title }}</h2></a>
-                    <p class="description">
-                        {{ post.content | strip_html | truncatewords:40 }}
-                        <a href="{{ post.url | prepend: site.baseurl }}" class="link">Read more about {{post.title}}</a>
-                    </p>
+            <h1 style="text-align: center; margin-bottom: 54px"> Projects </h1>
 
-                    <div class="tags">
-                        {% for tag in post.tags %}
-                            <a href="{{ site.baseurl }}/tags/#{{tag | slugify }}">{{ tag }}</a>
-                        {% endfor %}
-                    </div>
-                </div>
-        </article>
-    {% endfor %}
+        <div class="three-wide">
+            <figure>
+                <image src="./assets/img/portfolio2018.png" alt="2018 Portfolio Website" >
+                <figcaption>2018 Portfolio Website</figcaption>
+            </figure>
+            <figure>
+                <image src="./assets/img/portfolio2017.png" alt="2017 Portfolio Website" >
+                <figcaption>2017 Portfolio Website</figcaption>
+            </figure>
+            <figure>
+                <image src="./assets/img/riche.png" alt="Riche Art Gallery" >
+                <figcaption>Riche Art Gallery</figcaption>
+            </figure>
+        </div>
+
+
 </main>

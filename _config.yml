@@ -1,7 +1,7 @@
 # Site settings
 title: Sam Richardson
 description: A blog by Sam Richardson
-baseurl: "/will-jekyll-template" # the subpath of your site, e.g. /blog
+baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://samricha.com" # the base hostname & protocol for your site e.g. http://willianjusten.com.br
 
 # User settings
